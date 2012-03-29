@@ -118,8 +118,8 @@ class Topcomm_Widget extends WP_Widget {
 		// display widget in blog
  		$writeList = "\n" . $before_widget . "\n" . $before_title . $title . $after_title;
     // comment list                                          
-    $writeList .= $listDesc . "\n";
-    $writeList .= $listStart . "\n";
+    $listHtml = $listDesc . "\n";
+    $listHtml .= $listStart . "\n";
     global $wpdb;
     $commenters = $wpdb->get_results("SELECT COUNT($groupBy) AS comment_comments, comment_author, comment_author_url, comment_author_email 
       FROM $wpdb->comments
@@ -145,16 +145,16 @@ class Topcomm_Widget extends WP_Widget {
           AND comment_approved = 1
           ORDER BY comment_date DESC LIMIT 1
           ");
-        $writeList .= '<li>';
+        $listHtml .= '<li>';
         if(trim($url) != '') {
           // start makelink check
           if($makeLink == 1) {                        
-            $writeList .= "<a href='" . $url . "'";
+            $listHtml .= "<a href='" . $url . "'";
           if($noFollow == 1)
-            $writeList .= " rel='nofollow'";
+            $listHtml .= " rel='nofollow'";
           if($targetBlank == 1)
-            $writeList .= " target='_blank'";
-          $writeList .= ">";
+            $listHtml .= " target='_blank'";
+          $listHtml .= ">";
           } // end makelink check
         }
         $nCommentComments = $k->comment_comments;
@@ -166,39 +166,40 @@ class Topcomm_Widget extends WP_Widget {
           $strDisplayAward='<img class="tcwAward" src="' . $iconAward . '" alt="Top Commentator Award" title="Top Commentator Award" /> ';
         }
         if($alignAward==0) 
-          $writeList .= $strDisplayAward;
+          $listHtml .= $strDisplayAward;
         // start gravatar display check
         if($displayGravatar == 1)  {
           $image=md5(strtolower($k->comment_author_email));
           $defavatar=urlencode($defaultGravatar);
-          $writeList .= '<img class="tcwGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id='.$image.'&amp;size='.$avatarSize.'&amp;default='.$defavatar.'" alt ="'.$k->comment_author.'" title="'.$k->comment_author.'" /> ';
+          $listHtml .= '<img class="tcwGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id='.$image.'&amp;size='.$avatarSize.'&amp;default='.$defavatar.'" alt ="'.$k->comment_author.'" title="'.$k->comment_author.'" /> ';
         } // end gravatar display check
         if($alignAward==1)
-          $writeList .= $strDisplayAward;
+          $listHtml .= $strDisplayAward;
         if(strlen($k->comment_author) > $limitChar) {
           $str = substr($k->comment_author, 0, $limitChar-3) . "...";
         } else {
           $str = $k->comment_author;
         }
-        $writeList .= $str;
+        $listHtml .= $str;
         if($showCount == 1)
-          $writeList .= ' (' . $nCommentComments . ')';
+          $listHtml .= ' (' . $nCommentComments . ')';
         if(trim($url) != '') {
           if($makeLink == 1)
-            $writeList .= "</a>";
+            $listHtml .= "</a>";
         }
         if($alignAward == 2) 
-          $writeList .= $strDisplayAward;
-        $writeList .= "</li>\n";
+          $listHtml .= $strDisplayAward;
+        $listHtml .= "</li>\n";
         unset($url);
         ++$countList;
         $strDisplayAward = '';
       } // end foreach
     } else {
-      $writeList .= "<li>" . $listNull . "</li>\n";
+      $listHtml .= "<li>" . $listNull . "</li>\n";
     } // end ifarray check
-    $writeList .= $listEnd . "\n";
-    $writeList .= $after_widget . "\n";
+    $listHtml .= $listEnd . "\n";
+    $listHtml = apply_filters('topcomm_list_widget_html', $listHtml, $this, $args, $instance);
+    $writeList .= $listHtml.$after_widget . "\n";
     if($showInHome == 1) {
     	if(is_home()) {
   		  echo $writeList;
