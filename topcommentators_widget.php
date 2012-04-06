@@ -212,6 +212,7 @@ class Topcomm_Widget extends WP_Widget {
     $listHtml .= $listEnd . "\n";
     $listHtml = apply_filters('topcomm_list_widget_html', $listHtml, $this, $args, $instance);
     $writeList .= $listHtml.$after_widget . "\n";
+    $writeList = trim($writeList);
 
     // Set our cache
     set_transient($transient_name, $writeList, 60*60); // 1 hour
