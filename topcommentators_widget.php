@@ -26,6 +26,14 @@ class Topcomm_Widget extends WP_Widget {
 	function widget( $args, $instance ) {
 		extract( $args );
 
+		// transient can change with each different setting
+		$transient_name = 'tcw_'.md5(serialize(array_merge($args, $instance)));
+		$html = get_transient($transient_name);
+
+		// If we've got our cache, then return out
+		if (!empty($html)) { echo $html; }
+
+
 		// variables
 		$title = $instance['title'];
 		$listDesc = $instance['listDesc'];
@@ -200,6 +208,10 @@ class Topcomm_Widget extends WP_Widget {
     $listHtml .= $listEnd . "\n";
     $listHtml = apply_filters('topcomm_list_widget_html', $listHtml, $this, $args, $instance);
     $writeList .= $listHtml.$after_widget . "\n";
+
+    // Set our cache
+    set_transient($transient_name, $writeList, 60*60); // 1 hour
+
     if($showInHome == 1) {
     	if(is_home()) {
   		  echo $writeList;
