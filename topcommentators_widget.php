@@ -265,16 +265,16 @@ class Topcomm_Widget extends WP_Widget {
 		$instance = wp_parse_args( (array) $instance, $defaults ); ?>
     <p>
 		<label for="<?php echo $this->get_field_id( 'title' ); ?>">Change widget title:</label>
-		<input id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo $instance['title']; ?>" style="width: 100%;" type="text" />
+		<input id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo esc_attr($instance['title']); ?>" style="width: 100%;" type="text" />
 		</p>
     <p>
 		<label for="<?php echo $this->get_field_id( 'listDesc' ); ?>">Add description below the title:</label>
-		<input id="<?php echo $this->get_field_id( 'listDesc' ); ?>" name="<?php echo $this->get_field_name( 'listDesc' ); ?>" value="<?php echo $instance['listDesc']; ?>" style="width: 100%;" type="text" />
+		<input id="<?php echo $this->get_field_id( 'listDesc' ); ?>" name="<?php echo $this->get_field_name( 'listDesc' ); ?>" value="<?php echo esc_attr($instance['listDesc']); ?>" style="width: 100%;" type="text" />
 		<br /><small>Leave blank to exclude description</small>
     </p>
     <p>
 		<label for="<?php echo $this->get_field_id( 'excludeNames' ); ?>">Exclude these users:</label>
-		<input id="<?php echo $this->get_field_id( 'excludeNames' ); ?>" name="<?php echo $this->get_field_name( 'excludeNames' ); ?>" value="<?php echo $instance['excludeNames']; ?>" style="width: 100%;" type="text" />
+		<input id="<?php echo $this->get_field_id( 'excludeNames' ); ?>" name="<?php echo $this->get_field_name( 'excludeNames' ); ?>" value="<?php echo esc_attr($instance['excludeNames']); ?>" style="width: 100%;" type="text" />
 		<br /><small>Separate each name with a comma (,)</small>
     </p>
 		<p>
@@ -289,31 +289,31 @@ class Topcomm_Widget extends WP_Widget {
 		</select>
 		<br />Or specify number of days / enter range of date: <input style="width: 100%;" id="<?php echo $this->get_field_id( 'listPeriodnum' ); ?>" name="<?php echo $this->get_field_name( 'listPeriodnum' ); ?>" type="text" value="<?php
   	if( (int)$instance['listPeriod'] || (strpos($instance['$listPeriod'], 'and') !== false) )
-   		 	echo $instance['listPeriod'];
+   		 	echo esc_attr($instance['listPeriod']);
   	?>" /><br /><small>E.g. <strong>100</strong> for # of days or <strong>20090301 and 20090531</strong> for date range</small></p>
 		</p>
     <p>
 		<label for="<?php echo $this->get_field_id( 'limitList' ); ?>">Limit number of names to:</label>
-		<input id="<?php echo $this->get_field_id( 'limitList' ); ?>" name="<?php echo $this->get_field_name( 'limitList' ); ?>" value="<?php echo $instance['limitList']; ?>" style="width: 30px;" type="text" />
+		<input id="<?php echo $this->get_field_id( 'limitList' ); ?>" name="<?php echo $this->get_field_name( 'limitList' ); ?>" value="<?php echo esc_attr($instance['limitList']); ?>" style="width: 30px;" type="text" />
 		<br /><small>Enter numbers only</small>
     </p>
     <p>
 		<label for="<?php echo $this->get_field_id( 'limitChar' ); ?>">Limit characters in names to:</label>
-		<input id="<?php echo $this->get_field_id( 'limitChar' ); ?>" name="<?php echo $this->get_field_name( 'limitChar' ); ?>" value="<?php echo $instance['limitChar']; ?>" style="width: 30px;" type="text" />
+		<input id="<?php echo $this->get_field_id( 'limitChar' ); ?>" name="<?php echo $this->get_field_name( 'limitChar' ); ?>" value="<?php echo esc_attr($instance['limitChar']); ?>" style="width: 30px;" type="text" />
 		<br /><small>Enter numbers only</small>
     </p>
     <p>
 		<label for="<?php echo $this->get_field_id( 'listNull' ); ?>">Remarks for blank list:</label>
-		<input id="<?php echo $this->get_field_id( 'listNull' ); ?>" name="<?php echo $this->get_field_name( 'listNull' ); ?>" value="<?php echo $instance['listNull']; ?>" style="width: 100%;" type="text" />
+		<input id="<?php echo $this->get_field_id( 'listNull' ); ?>" name="<?php echo $this->get_field_name( 'listNull' ); ?>" value="<?php echo esc_attr($instance['listNull']); ?>" style="width: 100%;" type="text" />
     </p>
     <p>
 		<label for="<?php echo $this->get_field_id( 'filterUrl' ); ?>">Filter the following full/partial URLs:</label>
-		<input id="<?php echo $this->get_field_id( 'filterUrl' ); ?>" name="<?php echo $this->get_field_name( 'filterUrl' ); ?>" value="<?php echo $instance['filterUrl']; ?>" style="width: 100%;" type="text" />
+		<input id="<?php echo $this->get_field_id( 'filterUrl' ); ?>" name="<?php echo $this->get_field_name( 'filterUrl' ); ?>" value="<?php echo esc_attr($instance['filterUrl']); ?>" style="width: 100%;" type="text" />
 		<br /><small>Separate each URL with a comma (,)</small>
     </p>
     <p>
 		<label for="<?php echo $this->get_field_id( 'filterEmail' ); ?>">Filter the following full/partial emails:</label>
-		<input id="<?php echo $this->get_field_id( 'filterEmail' ); ?>" name="<?php echo $this->get_field_name( 'filterEmail' ); ?>" value="<?php echo $instance['filterEmail']; ?>" style="width: 100%;" type="text" />
+		<input id="<?php echo $this->get_field_id( 'filterEmail' ); ?>" name="<?php echo $this->get_field_name( 'filterEmail' ); ?>" value="<?php echo esc_attr($instance['filterEmail']); ?>" style="width: 100%;" type="text" />
 		<br /><small>Separate each email with a comma (,)</small>
     </p>
 		<p>
@@ -388,16 +388,16 @@ class Topcomm_Widget extends WP_Widget {
 		<option value="monsterid"<?php if ( 'monsterid' == $instance['defaultGravatar'] ) echo 'selected="selected"'; ?>>MonsterID</option>
 		<option value="wavatar"<?php if ( 'wavatar' == $instance['defaultGravatar'] ) echo 'selected="selected"'; ?>>Wavatar</option>
 		</select>
-		Size:<input id="<?php echo $this->get_field_id( 'avatarSize' ); ?>" name="<?php echo $this->get_field_name( 'avatarSize' ); ?>" value="<?php echo $instance['avatarSize']; ?>" style="width: 30px;" type="text" />
+		Size:<input id="<?php echo $this->get_field_id( 'avatarSize' ); ?>" name="<?php echo $this->get_field_name( 'avatarSize' ); ?>" value="<?php echo esc_attr($instance['avatarSize']); ?>" style="width: 30px;" type="text" />
 		</p>
     <p>
 		<label for="<?php echo $this->get_field_id( 'displayAward' ); ?>">Show an Award if comments are equal or greater than:</label>
-		<input id="<?php echo $this->get_field_id( 'displayAward' ); ?>" name="<?php echo $this->get_field_name( 'displayAward' ); ?>" value="<?php echo $instance['displayAward']; ?>" style="width: 30px;" type="text" />
+		<input id="<?php echo $this->get_field_id( 'displayAward' ); ?>" name="<?php echo $this->get_field_name( 'displayAward' ); ?>" value="<?php echo esc_attr($instance['displayAward']); ?>" style="width: 30px;" type="text" />
 		<br /><small>Award image/icon appears if number greater than zero (0)</small>
     </p>
     <p>
 		<label for="<?php echo $this->get_field_id( 'iconAward' ); ?>">Award icon/image location:</label>
-		<input id="<?php echo $this->get_field_id( 'iconAward' ); ?>" name="<?php echo $this->get_field_name( 'iconAward' ); ?>" value="<?php echo $instance['iconAward']; ?>" style="width: 100%;" type="text" />
+		<input id="<?php echo $this->get_field_id( 'iconAward' ); ?>" name="<?php echo $this->get_field_name( 'iconAward' ); ?>" value="<?php echo esc_attr($instance['iconAward']); ?>" style="width: 100%;" type="text" />
     </p>
 		<p>
 		<label for="<?php echo $this->get_field_id( 'alignAward' ); ?>">Align the Award icon:</label> 
