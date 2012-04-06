@@ -24,14 +24,18 @@ class Topcomm_Widget extends WP_Widget {
 
   // start function widget 
 	function widget( $args, $instance ) {
+	    global $wpdb;
 		extract( $args );
 
 		// transient can change with each different setting
 		$transient_name = 'tcw_'.md5(serialize(array_merge($args, $instance)));
 		$html = get_transient($transient_name);
 
-		// If we've got our cache, then return out
-		if (!empty($html)) { echo $html; }
+		// If we've got our cache, echo then return out
+		if (!empty($html)) {
+			echo $html;
+			return;
+		}
 
 
 		// variables
