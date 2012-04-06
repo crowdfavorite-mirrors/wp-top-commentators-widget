@@ -161,7 +161,7 @@ class Topcomm_Widget extends WP_Widget {
         if(trim($url) != '') {
           // start makelink check
           if($makeLink == 1) {                        
-            $listHtml .= "<a href='" . $url . "'";
+            $listHtml .= "<a href='" . esc_url($url) . "'";
           if($noFollow == 1)
             $listHtml .= " rel='nofollow'";
           if($targetBlank == 1)
@@ -175,7 +175,7 @@ class Topcomm_Widget extends WP_Widget {
         if($displayAward == '0') {
           $strDisplayAward = '';
         } elseif($nCommentComments >= $displayAward) {
-          $strDisplayAward='<img class="tcwAward" src="' . $iconAward . '" alt="Top Commentator Award" title="Top Commentator Award" /> ';
+          $strDisplayAward='<img class="tcwAward" src="' . esc_url($iconAward) . '" alt="Top Commentator Award" title="Top Commentator Award" /> ';
         }
         if($alignAward==0) 
           $listHtml .= $strDisplayAward;
@@ -207,7 +207,7 @@ class Topcomm_Widget extends WP_Widget {
         $strDisplayAward = '';
       } // end foreach
     } else {
-      $listHtml .= "<li>" . $listNull . "</li>\n";
+      $listHtml .= "<li>" . esc_html($listNull) . "</li>\n";
     } // end ifarray check
     $listHtml .= $listEnd . "\n";
     $listHtml = apply_filters('topcomm_list_widget_html', $listHtml, $this, $args, $instance);
