@@ -45,10 +45,8 @@ class Topcomm_Widget extends WP_Widget {
 		if($instance['excludeNames'] != "") {
 			$excludeNames = trim($instance['excludeNames']);
 			$excludeNames = explode(",", $excludeNames);
-			for($i=0; $i<count($excludeNames); $i++) {
-				$new_names .= " AND comment_author NOT IN ('" . trim($excludeNames[$i]) . "')";
-			}
-			$excludeNames = $new_names;
+			array_walk($excludeNames, array($wpdb, 'escape_by_ref')); // escape our entries
+			$excludeNames = " AND comment_author NOT IN ('".implode("','", $excludeNames)."')";
 		} // end name filter prep
 		$listPeriod = $instance['listPeriod'];
 		// start list period setup
@@ -65,14 +63,14 @@ class Topcomm_Widget extends WP_Widget {
 		} elseif($listPeriod == "a") {
 			$listPeriod = "1=1";
 		} elseif(is_numeric($listPeriod)) {
-			$listPeriod = "comment_date >= CURDATE() - INTERVAL $listPeriod DAY";
+			$listPeriod = $wpdb->prepare("comment_date >= CURDATE() - INTERVAL %d DAY", $listPeriod);
 		// check if a range of date is entered, then generate the appropriate SQL statement
 		} elseif(strpos($listPeriod, 'and') !== false) {
-			$listPeriod = "comment_date BETWEEN $listPeriod";
+			$listPeriod = "comment_date BETWEEN ".$wpdb->escape($listPeriod);
 		} else {
 			$listPeriod = "comment_date >= CURDATE() - INTERVAL 30 DAY";
 		} // end list period setup
-		$listPeriod = ' AND ' . $listPeriod;
+		$listPeriod = ' AND ' . $listPeriod; // $listPeriod is already escaped
 		$limitList = $instance['limitList'];
 		$limitChar = $instance['limitChar'];
 		$listNull = $instance['listNull'];
@@ -81,18 +79,18 @@ class Topcomm_Widget extends WP_Widget {
 			$filterUrl = trim($instance['filterUrl']);
 			$filterUrl = explode(",", $filterUrl);
 			for($i=0; $i<count($filterUrl); $i++) {
-				$new_urls .= " AND comment_author_url NOT LIKE '%" . trim($filterUrl[$i]) . "%'";
+				$new_urls .= " AND comment_author_url NOT LIKE '%" . $wpdb->escape(trim($filterUrl[$i])) . "%'";
 			}
-			$filterUrl = $new_urls;
+			$filterUrl = $new_urls; // escaped just above
 		} // end url filter prep
 		// start email filter prep
 		if($instance['filterEmail'] != "") {
 			$filterEmail = trim($instance['filterEmail']);
 			$filterEmail = explode(",", $filterEmail);
 			for($i=0; $i<count($filterEmail); $i++) {
-				$new_emails .= " AND comment_author_email NOT LIKE '%" . trim($filterEmail[$i]) . "%'";
+				$new_emails .= " AND comment_author_email NOT LIKE '%" . $wpdb->escape(trim($filterEmail[$i])) . "%'";
 			}
-			$filterEmail = $new_emails;
+			$filterEmail = $new_emails; // escaped just above
 		} // end url filter prep
 		$listType = $instance['listType'];
 		// start list type setup
@@ -132,27 +130,31 @@ class Topcomm_Widget extends WP_Widget {
     // comment list                                          
     $listHtml = $listDesc . "\n";
     $listHtml .= $listStart . "\n";
-    global $wpdb;
-    $commenters = $wpdb->get_results("SELECT COUNT($groupBy) AS comment_comments, comment_author, comment_author_url, comment_author_email 
-      FROM $wpdb->comments
-      WHERE comment_type != 'pingback'
-      AND comment_author != ''
-      AND comment_approved = '1' 
-      $excludeNames
-      $listPeriod
-      $filterUrl
-      $filterEmail
-      $onlyWithUrl
-      GROUP BY $groupBy
-      ORDER BY comment_comments DESC, comment_author
-      ");
+
+    $groupBy = $wpdb->escape($groupBy);
+
+    // Don't need to escape here, as $vars have all been escaped earlier
+    $commenters = $wpdb->get_results("
+    	SELECT COUNT($groupBy) AS comment_comments, comment_author, comment_author_url, comment_author_email 
+    	FROM $wpdb->comments
+    	WHERE comment_type != 'pingback'
+    	AND comment_author != ''
+    	AND comment_approved = '1' 
+    	$excludeNames
+    	$listPeriod
+    	$filterUrl
+    	$filterEmail
+    	$onlyWithUrl
+    	GROUP BY $groupBy
+    	ORDER BY comment_comments DESC, comment_author
+    ");
     // start ifarray check
     if(count($commenters) > 0) {
       $commenters = array_slice($commenters,0,$limitList);
       // start foreach commenter
       foreach ($commenters as $k) {
         $url = $wpdb->get_var("SELECT comment_author_url FROM $wpdb->comments
-          WHERE comment_author_email = '".addslashes($k->comment_author_email)."'
+          WHERE comment_author_email = '".$wpdb->escape($k->comment_author_email)."'
           AND comment_author_url != 'http://'
           AND comment_approved = 1
           ORDER BY comment_date DESC LIMIT 1
@@ -194,7 +196,7 @@ class Topcomm_Widget extends WP_Widget {
         }
         $listHtml .= $str;
         if($showCount == 1)
-          $listHtml .= ' (' . $nCommentComments . ')';
+          $listHtml .= ' (' . $nCommentComments . ')'; //$nCommentComments cast to int earlier
         if(trim($url) != '') {
           if($makeLink == 1)
             $listHtml .= "</a>";
