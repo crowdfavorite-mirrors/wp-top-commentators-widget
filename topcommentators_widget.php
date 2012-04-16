@@ -153,12 +153,16 @@ class Topcomm_Widget extends WP_Widget {
       $commenters = array_slice($commenters,0,$limitList);
       // start foreach commenter
       foreach ($commenters as $k) {
-        $url = $wpdb->get_var("SELECT comment_author_url FROM $wpdb->comments
-          WHERE comment_author_email = '".$wpdb->escape($k->comment_author_email)."'
-          AND comment_author_url != 'http://'
-          AND comment_approved = 1
-          ORDER BY comment_date DESC LIMIT 1
-          ");
+      	$url = '';
+      	if (!empty($k->comment_author_email)) {
+			$comment_author_sql = "SELECT comment_author_url FROM $wpdb->comments
+				WHERE comment_author_email = '".$wpdb->escape($k->comment_author_email)."'
+				AND comment_author_url != 'http://'
+				AND comment_approved = 1
+				ORDER BY comment_date DESC LIMIT 1
+			";
+			$url = $wpdb->get_var($comment_author_sql);
+      	}
         $listHtml .= '<li>';
         if(trim($url) != '') {
           // start makelink check
