@@ -187,9 +187,7 @@ class Topcomm_Widget extends WP_Widget {
           $listHtml .= $strDisplayAward;
         // start gravatar display check
         if($displayGravatar == 1)  {
-          $image=md5(strtolower($k->comment_author_email));
-          $defavatar=urlencode($defaultGravatar);
-          $listHtml .= '<img class="tcwGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id='.$image.'&amp;size='.$avatarSize.'&amp;default='.$defavatar.'" alt ="'.$k->comment_author.'" title="'.$k->comment_author.'" /> ';
+          $listHtml .= get_avatar($k->comment_author_email, $avatarSize, null, $k->comment_author);
         } // end gravatar display check
         if($alignAward==1)
           $listHtml .= $strDisplayAward;
